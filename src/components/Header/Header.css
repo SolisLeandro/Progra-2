@@ -1,0 +1,17 @@
+.header-general-div {
+    display: flex;
+    gap: 20px;
+    margin: 20px 35px;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+}
+
+.header-div {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.header-number-input {
+    width: 50px;
+}
