@@ -1,6 +1,6 @@
 import fs from "fs"
 
-function loadAndProcessInstructions(inputFile) {
+export function loadAndProcessInstructions(inputFile) {
   // Leer el archivo de entrada y dividirlo en líneas
   const lines = inputFile.split("\n");
 
@@ -21,13 +21,13 @@ function loadAndProcessInstructions(inputFile) {
   return instructions;
 }
 
-function getRandomInt(min, max, randomSeed) {
+export function getRandomInt(min, max, randomSeed) {
   min = Math.ceil(min);
   max = Math.floor(max);
   return Math.floor(randomSeed() * (max - min + 1) + min);
 }
 
-function generateRandomInstructions(seed, numProcesses, numOperations) {
+export function generateRandomInstructions(seed, numProcesses, numOperations) {
   const randomSeed = new Math.randomSeed(seed);
   let instructions = [];
   let processTable = new Map();
@@ -96,13 +96,6 @@ function generateRandomInstructions(seed, numProcesses, numOperations) {
   return instructions;
 }
 
-function saveInstructionsToFile(instructions, fileName) {
+export function saveInstructionsToFile(instructions, fileName) {
   fs.writeFileSync(fileName, instructions.join("\n"), "utf8");
 }
-
-module.exports = {
-  getRandomInt,
-  saveInstructionsToFile,
-  loadAndProcessInstructions,
-  generateRandomInstructions,
-};
