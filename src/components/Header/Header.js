@@ -14,25 +14,33 @@ function Header({setMMU_Simulation}) {
   async function handleFileRead() {
     const reader = new FileReader();
     reader.onload = (event) => {
-      console.log("MMU: ", document.getElementById("mmuSelect").value)
-      console.log("Process: ", parseInt(document.getElementById("processNum").value))
-      console.log("Operations: ", parseInt(document.getElementById("operationsNum").value))
-      console.log("Seed: ", document.getElementById("seed").value)
-      console.log("Sleep: ", document.getElementById("sleep").value)
-      
-      setMMU_Simulation(new MMU_Simulation(document.getElementById("mmuSelect").value, document.getElementById("seed").value, 1))
-      console.log("aaaaaa-"+event.target.result); // Aquí puedes hacer lo que necesites con el contenido del archivo
-      
+      return event.target.result   
     };
     reader.readAsText(selectedFile);
   }
 
   const startBtnClick = async () => {
+    var MMU = document.getElementById("mmuSelect").value
+    var process = parseInt(document.getElementById("processNum").value)
+    var operations = parseInt(document.getElementById("operationsNum").value)
+    var seed = document.getElementById("seed").value
+    var sleep = document.getElementById("sleep").value
+    console.log("MMU: ", MMU)
+    console.log("Process: ", process)
+    console.log("Operations: ", operations)
+    console.log("Seed: ", seed)
+    console.log("Sleep: ", sleep)
+
+    var mmuSimulation = new MMU_Simulation(MMU, seed, sleep)
+    mmuSimulation.setGenerateRandomInstructions(process, operations)
+    
     if(selectedFile != "") {
       await handleFileRead()
     } else {
       console.log("hola")
     }
+
+
   }
 
     return (
