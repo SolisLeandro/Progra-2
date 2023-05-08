@@ -91,11 +91,16 @@ export function generateRandomInstructions(seed, numProcesses, numOperations) {
     }
   }
 
-  return instructions;
+  var instructionsString = "";
+  for (const instruction of instructions) {
+    instructionsString += instruction + "\n";
+  }
+
+  return instructionsString;
 }
 
 export function saveInstructionsToFile(instructions, fileName) {
-  var content = instructions.instructions.join("\n")
+  var content = instructions.instructions.join("\n");
   const blob = new Blob([content], { type: "text/plain" });
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
