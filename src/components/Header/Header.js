@@ -4,7 +4,7 @@ import {generateRandomInstructions, saveInstructionsToFile} from "../../MMU_Simu
 
 import './Header.css'
 
-function Header({MMU, setMMU_Simulation}) {
+function Header({setMMU_Simulation}) {
   const [selectedFile, setSelectedFile] = useState("")
   
   const handleFileSelect = (event) => {
@@ -41,7 +41,7 @@ function Header({MMU, setMMU_Simulation}) {
     } else {
       instructionsString = generateRandomInstructions(seed, process, operations)
     }
-
+    console.log("instructionsString: ", instructionsString)
     mmuSimulation.setInstructionsString(instructionsString)
     saveInstructionsToFile(instructionsString)
     setMMU_Simulation(mmuSimulation)
@@ -84,12 +84,6 @@ function Header({MMU, setMMU_Simulation}) {
           <input type="file" onChange={handleFileSelect} />
         </div>
         <button onClick={startBtnClick}>Generar</button>
-        {MMU 
-          ?
-            <button onClick={() => { MMU.iniciate()}}>Iniciar</button>
-          : 
-            null
-        }
       </div>
     )
   }

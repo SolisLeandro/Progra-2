@@ -1,7 +1,9 @@
+import seedrandom from 'seedrandom';
+
 export function loadAndProcessInstructions(inputFile) {
   // Leer el archivo de entrada y dividirlo en líneas
-  const lines = inputFile.split("\n");
-
+  var lines = inputFile.split("\n");
+  lines = lines.filter((x) => x != "")
   // Procesar las líneas y extraer las instrucciones y argumentos
   const instructions = lines.map((line) => {
     const matches = line.match(/(\w+)\(([\d, ]+)\)/);
@@ -16,6 +18,8 @@ export function loadAndProcessInstructions(inputFile) {
     return { instruction, args };
   });
 
+  console.log("instructions//////",instructions)
+
   return instructions;
 }
 
@@ -26,7 +30,7 @@ export function getRandomInt(min, max, randomSeed) {
 }
 
 export function generateRandomInstructions(seed, numProcesses, numOperations) {
-  const randomSeed = new Math.randomSeed(seed);
+  const randomSeed = seedrandom(seed);
   let instructions = [];
   let processTable = new Map();
   let ptrCounter = 1;

@@ -29,6 +29,32 @@ function App() {
   const [vRamPercentage, setVRamPercentage] = useState("")
   const [MMU_Simulation, setMMU_Simulation] = useState(null)
 
+  useEffect(() => {
+    const fetchData = async () => {
+      setTimeout(function() {
+        console.log("holita")
+      }, 3000)
+      
+      MMU_Simulation.iniciate()
+      var instructions = MMU_Simulation.instructions
+      var sleepTime = MMU_Simulation.sleepTime
+
+      for (let index = 0; index < instructions.length; index++) {
+        const instruction = instructions[index];
+        MMU_Simulation.executeInstruction(instruction, 1, sleepTime)
+        MMU_Simulation.executeInstruction(instruction, 2, sleepTime)
+      }
+
+      setMMU_Simulation(null)
+    }
+  
+    if (MMU_Simulation) {
+      fetchData()
+    }
+
+    
+  },[MMU_Simulation]);
+
   return (
     <div>
       <Header MMU={MMU_Simulation} setMMU_Simulation={setMMU_Simulation} />
