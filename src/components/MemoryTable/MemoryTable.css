@@ -1,0 +1,50 @@
+.memory-table-general-div {}
+
+.memory-table-div {
+    overflow-y: scroll;
+    max-height: 212px;
+}
+
+.memory-thead {
+    position: sticky;
+    top: 0;
+    background: lightblue;
+}
+
+.memory-table {
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 1rem;
+    background-color: mintcream;
+    font-size: 0.9rem;
+  }
+  
+  .memory-th,
+  .memory-td {
+    padding: 0.75rem;
+    vertical-align: middle;
+    border-right: 1px solid #FFF;
+    border-top: 1px solid #dee2e6;
+    text-align: center;
+  }
+  
+  .memory-th {
+    font-weight: 600;
+    border-bottom: 2px solid #dee2e6;
+  }
+
+  .memory-th-2 {
+    padding: 0.75rem;
+    vertical-align: middle;
+    border-right: 1px solid #FFF;
+    border-top: 1px solid #dee2e6;
+    text-align: center;
+  }
+  
+  .memory-td-2 {
+    padding: 0.75rem;
+    vertical-align: middle;
+    border-right: 1px solid #FFF;
+    text-align: center;
+  }

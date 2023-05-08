@@ -4,6 +4,7 @@
     margin: 20px 35px;
     justify-content: space-evenly;
     flex-wrap: wrap;
+    gap: 0px;
 }
 
 .header-div {

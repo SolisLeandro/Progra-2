@@ -1,8 +1,9 @@
 import React, { useState } from "react"
+import MMU_Simulation from "../../MMU_Simulation/MMU_Simulation"
 
 import './Header.css'
 
-function Header() {
+function Header({setMMU_Simulation}) {
   const [selectedFile, setSelectedFile] = useState("")
   
   const handleFileSelect = (event) => {
@@ -13,12 +14,19 @@ function Header() {
   const handleFileRead = () => {
     const reader = new FileReader();
     reader.onload = (event) => {
-      console.log(event.target.result); // Aquí puedes hacer lo que necesites con el contenido del archivo
+      console.log("aaaaaa-"+event.target.result); // Aquí puedes hacer lo que necesites con el contenido del archivo
     };
     reader.readAsText(selectedFile);
   }
 
-  
+  const startBtnClick = () => {
+    if(selectedFile != "") {
+      handleFileRead()
+    } else {
+      console.log("hola")
+    }
+  }
+
     return (
       <div className='header-general-div'>
         <div className='header-div'>
@@ -50,7 +58,7 @@ function Header() {
           <p>Archivo (Procesos)</p>
           <input type="file" onChange={handleFileSelect} />
         </div>
-        <button onClick={handleFileRead}>Iniciar</button>
+        <button onClick={startBtnClick}>Iniciar</button>
       </div>
     )
   }

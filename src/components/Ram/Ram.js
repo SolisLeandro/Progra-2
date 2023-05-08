@@ -1,13 +1,16 @@
 import './Ram.css'
 
-function Ram({memory}) {
+function Ram({memory, title}) {
     return (
       <div className='memory-general-div'>
-        { memory?.map((element) => {
+        <h3>{"RAM - " + title}</h3>
+        <div className='memory-div'>
+          { memory?.map((element, key) => {
             return (
-                <div style={element.color ? element.color : {}} className="memory-cell"></div>
+                <div key={key} style={element.color ? element.color : {}} className="memory-cell"></div>
             )
-        })}
+          })}
+        </div>
       </div>
     )
   }
