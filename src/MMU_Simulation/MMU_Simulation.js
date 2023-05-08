@@ -109,3 +109,4 @@ class MMU_Simulation {
   }
 }
 
+export default MMU_Simulation;
