@@ -1,4 +1,4 @@
-class Stopwatch {
+export class Stopwatch {
   constructor(
     time,
     timeIncreasePerPage,
@@ -20,7 +20,7 @@ class Stopwatch {
   }
 }
 
-class Page {
+export class Page {
   constructor(id, location, physicalAddress, size) {
     this.id = id;
     this.location = location;
@@ -31,7 +31,7 @@ class Page {
   }
 }
 
-class MMU {
+export class MMU {
   constructor() {
     this.realMemory = new Array(100).fill(null); // 100 páginas en memoria real
     this.virtualMemory = [];
@@ -167,7 +167,7 @@ class MMU {
   }
 }
 
-class FIFO_MMU extends MMU {
+export class FIFO_MMU extends MMU {
   constructor() {
     super();
     this.queue = [];
@@ -210,7 +210,7 @@ class FIFO_MMU extends MMU {
   }
 }
 
-class SC_MMU extends MMU {
+export class SC_MMU extends MMU {
   constructor() {
     super();
     this.queue = [];
@@ -281,7 +281,7 @@ class SC_MMU extends MMU {
   }
 }
 
-class MRU_MMU extends MMU {
+export class MRU_MMU extends MMU {
   constructor() {
     super();
     this.lastUsed = new Array(100).fill(null);
@@ -343,7 +343,7 @@ class MRU_MMU extends MMU {
   }
 }
 
-class RND_MMU extends MMU {
+export class RND_MMU extends MMU {
   constructor() {
     super();
   }
@@ -383,7 +383,7 @@ class RND_MMU extends MMU {
   }
 }
 
-class OptMMU extends MMU {
+export class OptMMU extends MMU {
   constructor(instructions) {
     super();
     this.instructions = instructions;
@@ -467,15 +467,3 @@ class OptMMU extends MMU {
     return Infinity;
   }
 }
-
-// Exporta las clases
-module.exports = {
-  Stopwatch,
-  Page,
-  MMU,
-  OptMMU,
-  FIFO_MMU,
-  SC_MMU,
-  MRU_MMU,
-  RND_MMU,
-};
