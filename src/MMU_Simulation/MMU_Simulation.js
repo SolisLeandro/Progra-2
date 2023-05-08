@@ -1,10 +1,6 @@
 import { OptMMU, FIFO_MMU, SC_MMU, MRU_MMU, RND_MMU } from "./classes.js";
 
-import {
-  loadAndProcessInstructions,
-  generateRandomInstructions,
-  saveInstructionsToFile,
-} from "./functions.js";
+import {loadAndProcessInstructions} from "./functions.js";
 
 class MMU_Simulation {
   constructor(MMUtoExecute, randomSeed, sleepTime) {
@@ -17,11 +13,16 @@ class MMU_Simulation {
     this.optMMU = null
     this.otherMMU = null
     this.instructions = null
+    this.instructionsString = null
   }
 
   setGenerateRandomInstructions(numProcesses, numOperations) {
     this.numProcesses = numProcesses;
     this.numOperations = numOperations;
+  }
+
+  setInstructionsString(instructionsString) {
+    this.instructionsString = instructionsString;
   }
 
   pauseExecution() {
@@ -32,9 +33,9 @@ class MMU_Simulation {
     this.isPaused = false;
   }
 
-  iniciate(instructionsString) {
+  iniciate() {
     //const instructionsString = Elige entre si generar las instrucciones o leerlas de un archivo. Recuerde que si las genera tiene que usar la función "saveInstructionsToFile" para guardarlo en un txt
-    this.instructions = loadAndProcessInstructions(instructionsString);
+    this.instructions = loadAndProcessInstructions(this.instructionsString);
 
     this.optMMU = new OptMMU(this.instructions);
 

@@ -100,8 +100,7 @@ export function generateRandomInstructions(seed, numProcesses, numOperations) {
 }
 
 export function saveInstructionsToFile(instructions, fileName) {
-  var content = instructions.instructions.join("\n");
-  const blob = new Blob([content], { type: "text/plain" });
+  const blob = new Blob([instructions], { type: "text/plain" });
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.download = fileName;

@@ -27,11 +27,11 @@ function App() {
   const [ramPercentage, setRamPercentage] = useState("")
   const [vRamKb, setVRamKb] = useState("")
   const [vRamPercentage, setVRamPercentage] = useState("")
-  const [MMU_Simulation, setMMU_Simulation] = useState("")
+  const [MMU_Simulation, setMMU_Simulation] = useState(null)
 
   return (
     <div>
-      <Header setMMU_Simulation={setMMU_Simulation} />
+      <Header MMU={MMU_Simulation} setMMU_Simulation={setMMU_Simulation} />
       <div className='memory-container'>
         <Ram memory={memory} title={"OPT"} />
         <Ram memory={memory} title={memoryTitle} />

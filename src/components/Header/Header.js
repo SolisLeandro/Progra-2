@@ -1,9 +1,10 @@
 import React, { useState } from "react"
 import MMU_Simulation from "../../MMU_Simulation/MMU_Simulation"
+import {generateRandomInstructions, saveInstructionsToFile} from "../../MMU_Simulation/functions"
 
 import './Header.css'
 
-function Header({setMMU_Simulation}) {
+function Header({MMU, setMMU_Simulation}) {
   const [selectedFile, setSelectedFile] = useState("")
   
   const handleFileSelect = (event) => {
@@ -34,13 +35,16 @@ function Header({setMMU_Simulation}) {
     var mmuSimulation = new MMU_Simulation(MMU, seed, sleep)
     mmuSimulation.setGenerateRandomInstructions(process, operations)
     
+    var instructionsString = ""
     if(selectedFile != "") {
-      await handleFileRead()
+      instructionsString = await handleFileRead()
     } else {
-      console.log("hola")
+      instructionsString = generateRandomInstructions(seed, process, operations)
     }
 
-
+    mmuSimulation.setInstructionsString(instructionsString)
+    saveInstructionsToFile(instructionsString)
+    setMMU_Simulation(mmuSimulation)
   }
 
     return (
@@ -79,7 +83,13 @@ function Header({setMMU_Simulation}) {
           <p>Archivo (Procesos)</p>
           <input type="file" onChange={handleFileSelect} />
         </div>
-        <button onClick={startBtnClick}>Iniciar</button>
+        <button onClick={startBtnClick}>Generar</button>
+        {MMU 
+          ?
+            <button onClick={() => { MMU.iniciate()}}>Iniciar</button>
+          : 
+            null
+        }
       </div>
     )
   }
