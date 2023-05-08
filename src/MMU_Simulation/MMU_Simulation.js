@@ -1,6 +1,6 @@
 import { OptMMU, FIFO_MMU, SC_MMU, MRU_MMU, RND_MMU } from "./classes.js";
 
-import {loadAndProcessInstructions} from "./functions.js";
+import { loadAndProcessInstructions } from "./functions.js";
 
 class MMU_Simulation {
   constructor(MMUtoExecute, randomSeed, sleepTime) {
@@ -10,10 +10,10 @@ class MMU_Simulation {
     this.numProcesses = 0;
     this.numOperations = 0;
     this.isPaused = false;
-    this.optMMU = null
-    this.otherMMU = null
-    this.instructions = null
-    this.instructionsString = null
+    this.optMMU = null;
+    this.otherMMU = null;
+    this.instructions = null;
+    this.instructionsString = null;
   }
 
   setGenerateRandomInstructions(numProcesses, numOperations) {
@@ -73,32 +73,32 @@ class MMU_Simulation {
         setTimeout(resolve, sleepTime * 1000);
       }
     });
-  
+
     const { instruction: instr, args } = instruction;
     switch (instr) {
       case "new":
-        if(mmu==1){
+        if (mmu === 1) {
           this.optMMU.new(...args);
         } else {
           this.otherMMU.new(...args);
         }
         break;
       case "use":
-        if(mmu==1){
+        if (mmu === 1) {
           this.optMMU.use(...args);
         } else {
           this.otherMMU.use(...args);
         }
         break;
       case "delete":
-        if(mmu==1){
+        if (mmu === 1) {
           this.optMMU.delete(...args);
         } else {
           this.otherMMU.delete(...args);
         }
         break;
       case "kill":
-        if(mmu==1){
+        if (mmu === 1) {
           this.optMMU.kill(...args);
         } else {
           this.otherMMU.kill(...args);
