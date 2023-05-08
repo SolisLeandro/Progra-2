@@ -86,12 +86,14 @@ export class MMU {
   }
 
   new(pid, size) {
+    console.log("Entro New");
     const ptr = this.allocatePages(pid, size);
     // La función "new" devuelve la primera dirección de puntero lógico (id de la primera página)
     return ptr;
   }
 
   use(ptr) {
+    console.log("Entro Use");
     const pages = this.pointerMap.get(ptr);
     if (!pages) {
       throw new Error(`Puntero no válido: ${ptr}`);
@@ -106,6 +108,7 @@ export class MMU {
   }
 
   delete(ptr) {
+    console.log("Entro Delete");
     const pages = this.pointerMap.get(ptr);
     if (!pages) {
       throw new Error(`Puntero no válido: ${ptr}`);
@@ -136,12 +139,21 @@ export class MMU {
   }
 
   kill(pid) {
-    const pages = this.memoryMap.get(pid);
+    console.log("Entro Kill");
+    const ptrs = this.memoryMap.get(pid);
+    this.memoryMap.delete(pid);
+    const pages = [];
+    for (const ptr of ptrs) {
+      pages.push(...this.pointerMap.get(ptr));
+      this.pointerMap.delete(ptr);
+    }
     if (!pages) {
       throw new Error(`ID de proceso no válido: ${pid}`);
     }
+    console.log(pages);
 
     // Eliminar las páginas de memoria real y virtual y eliminar el puntero del mapa de memoria
+
     for (const page of pages) {
       if (page.location === "real") {
         this.stopwatch.increaseTime();
@@ -152,11 +164,6 @@ export class MMU {
         this.virtualMemory.splice(index, 1);
       }
     }
-    const ptrIds = this.memoryMap.get(pid);
-    for (const ptrId of ptrIds) {
-      this.pointerMap.delete(ptrId);
-    }
-    this.memoryMap.delete(pid);
   }
 
   moveToRealMemory(page) {
@@ -344,10 +351,6 @@ export class MRU_MMU extends MMU {
 }
 
 export class RND_MMU extends MMU {
-  constructor() {
-    super();
-  }
-
   moveToRealMemory(page) {
     //Remover la pagina a mover de la memoria virtual a la real
     const virtualPageIndex = this.virtualMemory.indexOf(page);
@@ -475,23 +478,23 @@ export class OptMMU extends MMU {
   // Sobreescribimos el método delete() para actualizar el registro de páginas utilizadas
   new(pid, size) {
     super.new(pid, size);
-    this.currentInstructionIndex = this.currentInstructionIndex + 1;
+    this.currentInstructionIndex++;
   }
 
   // Sobreescribimos el método use() para actualizar el registro de páginas utilizadas
   use(ptr) {
     super.use(ptr);
-    this.currentInstructionIndex = this.currentInstructionIndex + 1;
+    this.currentInstructionIndex++;
   }
 
   // Sobreescribimos el método delete() para actualizar el registro de páginas utilizadas
   delete(ptr) {
     super.delete(ptr);
-    this.currentInstructionIndex = this.currentInstructionIndex + 1;
+    this.currentInstructionIndex++;
   }
 
   kill(pid) {
     super.kill(pid);
-    this.currentInstructionIndex = this.currentInstructionIndex + 1;
+    this.currentInstructionIndex++;
   }
 }
