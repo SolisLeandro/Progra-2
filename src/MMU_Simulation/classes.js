@@ -169,7 +169,7 @@ export class MMU {
 
 export class FIFO_MMU extends MMU {
   constructor() {
-    super.();
+    super();
     this.queue = [];
   }
 
@@ -447,7 +447,11 @@ export class OptMMU extends MMU {
     const currentPageId = page.id;
     let distance = 1;
 
-    for ( let i = this.currentInstructionIndex; i < this.instructions.length; i++) {
+    for (
+      let i = this.currentInstructionIndex;
+      i < this.instructions.length;
+      i++
+    ) {
       const instruction = this.instructions.at(i);
       const operation = instruction.instruction;
       const target = instruction.args;
@@ -471,23 +475,23 @@ export class OptMMU extends MMU {
   // Sobreescribimos el método delete() para actualizar el registro de páginas utilizadas
   new(pid, size) {
     super.new(pid, size);
-    currentInstructionIndex++;
+    this.currentInstructionIndex = this.currentInstructionIndex + 1;
   }
 
   // Sobreescribimos el método use() para actualizar el registro de páginas utilizadas
   use(ptr) {
     super.use(ptr);
-    currentInstructionIndex++;
+    this.currentInstructionIndex = this.currentInstructionIndex + 1;
   }
 
   // Sobreescribimos el método delete() para actualizar el registro de páginas utilizadas
   delete(ptr) {
     super.delete(ptr);
-    currentInstructionIndex++;
+    this.currentInstructionIndex = this.currentInstructionIndex + 1;
   }
 
-  kill(pid){
+  kill(pid) {
     super.kill(pid);
-    this.currentInstructionIndex;
+    this.currentInstructionIndex = this.currentInstructionIndex + 1;
   }
 }
