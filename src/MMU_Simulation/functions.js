@@ -1,5 +1,3 @@
-import fs from "fs"
-
 export function loadAndProcessInstructions(inputFile) {
   // Leer el archivo de entrada y dividirlo en líneas
   const lines = inputFile.split("\n");
@@ -97,5 +95,14 @@ export function generateRandomInstructions(seed, numProcesses, numOperations) {
 }
 
 export function saveInstructionsToFile(instructions, fileName) {
-  fs.writeFileSync(fileName, instructions.join("\n"), "utf8");
+  var content = instructions.instructions.join("\n")
+  const blob = new Blob([content], { type: "text/plain" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.download = fileName;
+  link.href = url;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
 }
