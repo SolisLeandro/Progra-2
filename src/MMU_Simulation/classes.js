@@ -446,7 +446,11 @@ export class OptMMU extends MMU {
     const currentPageId = page.id;
     let distance = 1;
 
-    for (let i = 0; i < this.instructions.length; i++) {
+    for (
+      let i = this.currentInstructionIndex;
+      i < this.instructions.length;
+      i++
+    ) {
       const instruction = this.instructions.at(i);
       const operation = instruction.instruction;
       const target = instruction.args;
