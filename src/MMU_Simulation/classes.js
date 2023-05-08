@@ -169,7 +169,7 @@ export class MMU {
 
 export class FIFO_MMU extends MMU {
   constructor() {
-    super();
+    super.();
     this.queue = [];
   }
 
@@ -387,6 +387,7 @@ export class OptMMU extends MMU {
   constructor(instructions) {
     super();
     this.instructions = instructions;
+    this.currentInstructionIndex = 0;
   }
 
   moveToRealMemory(page) {
@@ -446,11 +447,7 @@ export class OptMMU extends MMU {
     const currentPageId = page.id;
     let distance = 1;
 
-    for (
-      let i = this.currentInstructionIndex;
-      i < this.instructions.length;
-      i++
-    ) {
+    for ( let i = this.currentInstructionIndex; i < this.instructions.length; i++) {
       const instruction = this.instructions.at(i);
       const operation = instruction.instruction;
       const target = instruction.args;
@@ -469,5 +466,28 @@ export class OptMMU extends MMU {
 
     // Si la página no se usa en el futuro, devuelve Infinity
     return Infinity;
+  }
+
+  // Sobreescribimos el método delete() para actualizar el registro de páginas utilizadas
+  new(pid, size) {
+    super.new(pid, size);
+    currentInstructionIndex++;
+  }
+
+  // Sobreescribimos el método use() para actualizar el registro de páginas utilizadas
+  use(ptr) {
+    super.use(ptr);
+    currentInstructionIndex++;
+  }
+
+  // Sobreescribimos el método delete() para actualizar el registro de páginas utilizadas
+  delete(ptr) {
+    super.delete(ptr);
+    currentInstructionIndex++;
+  }
+
+  kill(pid){
+    super.kill(pid);
+    this.currentInstructionIndex;
   }
 }
