@@ -130,14 +130,13 @@ export class MMU {
 
     // Eliminar el puntero del mapa de memoria
     this.pointerMap.delete(ptr);
-    for (const pidIter of this.memoryMap.keys()) {
-      const key = pidIter.next().value();
-      const index = this.memoryMap.get(key).indexOf(ptr);
-      if (index !== -1) {
-        this.memoryMap.set(key, this.memoryMap.get(key).splice(index, 1));
-        break;
+    this.memoryMap.forEach((value, key) => {
+      const indexPtr = value.indexOf(ptr);
+      if (indexPtr !== -1) {
+        const newPtrsArr = value.splice(indexPtr, 1);
+        this.memoryMap.set(key, newPtrsArr);
       }
-    }
+    });
   }
 
   kill(pid) {
