@@ -71,7 +71,9 @@ export class MMU {
     const ptr = this.generatePrt();
     this.pointerMap.set(ptr, pages);
     if (this.memoryMap.has(pid)) {
-      this.memoryMap.set(pid, this.memoryMap.get(pid).push(ptr));
+      var currentPtrs = this.memoryMap.get(pid);
+      currentPtrs.push(ptr);
+      this.memoryMap.set(pid, currentPtrs);
     } else {
       this.memoryMap.set(pid, [ptr]);
     }
