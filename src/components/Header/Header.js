@@ -25,7 +25,7 @@ function Header({setMMU_Simulation}) {
     var process = parseInt(document.getElementById("processNum").value)
     var operations = parseInt(document.getElementById("operationsNum").value)
     var seed = document.getElementById("seed").value
-    var sleep = document.getElementById("sleep").value
+    var sleep = parseFloat(document.getElementById("sleep").value)
     console.log("MMU: ", MMU)
     console.log("Process: ", process)
     console.log("Operations: ", operations)

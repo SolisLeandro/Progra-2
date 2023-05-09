@@ -141,8 +141,8 @@ export class MMU {
     this.memoryMap.delete(pid);
     const pages = [];
     for (let i = 0; i < ptrs.length; i++) {
-      pages.push(...this.pointerMap.get(ptrs.at(i)));
-      this.pointerMap.delete(ptrs.at(i));
+      pages.push(...this.pointerMap.get(ptrs[i]));
+      this.pointerMap.delete(ptrs[i]);
     }
     if (!pages) {
       throw new Error(`ID de proceso no válido: ${pid}`);
