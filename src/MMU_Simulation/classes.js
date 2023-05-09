@@ -130,8 +130,8 @@ export class MMU {
     this.memoryMap.forEach((value, key) => {
       const indexPtr = value.indexOf(ptr);
       if (indexPtr !== -1) {
-        const newPtrsArr = value.splice(indexPtr, 1);
-        this.memoryMap.set(key, newPtrsArr);
+        value.splice(indexPtr, 1);
+        this.memoryMap.set(key, value);
       }
     });
   }
