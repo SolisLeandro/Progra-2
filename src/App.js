@@ -50,7 +50,7 @@ function App() {
 
   function updateInfo(mmu, mmuIndex) {
     var newMemoryTable = []
-    var ramPages = []
+    var ramPages = createMemory()
     var ramKb = 0
     var vRamKb = 0
     var fragmentationKb = 0
@@ -86,10 +86,6 @@ function App() {
             usedColors.push({pid: PID, color})
           }
 
-          if(page.location == "real"){
-            ramPages.push({color})
-          }
-
           newMemoryTable.push({pageId: page.id, pid: PID, pointer:pointer, loaded: page.location == "real" ? "X" : "", physicalAddress: page.physicalAddress, color})
         })
       })
@@ -98,9 +94,12 @@ function App() {
     var thrashingTimee = mmu.stopwatch.trashingTime
     var totalTime = thrashingTimee + mmu.stopwatch.time
 
-    while (ramPages.length < 100) {
-      ramPages.push({});
-    }
+    newMemoryTable.sort((a, b) => a.physicalAddress - b.physicalAddress)
+    newMemoryTable?.forEach((elem) => {
+      if(elem.loaded == "X"){
+        ramPages[elem.physicalAddress] = {color: elem.color}
+      }
+    })
 
     if(mmuIndex == 1){
       setRamKb(ramKb/1024)
@@ -109,7 +108,7 @@ function App() {
       setVRamPercentage((100 * (vRamKb/1024) / 400) + "%")
       setFragmentation((fragmentationKb/1024).toFixed(2)+"KB")
       setThrashingTime(thrashingTimee + "s")
-      setThrashingPercentage((100 * thrashingTimee / totalTime) + "%")
+      setThrashingPercentage((100 * thrashingTimee / totalTime).toFixed(2) + "%")
       setSimTime(totalTime + "s")
       setMemoryTable(newMemoryTable)
       setProcesses(mmu.memoryMap.size)
@@ -123,7 +122,7 @@ function App() {
       setVRamPercentage2((100 * (vRamKb/1024) / 400) + "%")
       setFragmentation2((fragmentationKb/1024).toFixed(2)+"KB")
       setThrashingTime2(thrashingTimee + "s")
-      setThrashingPercentage2((100 * thrashingTimee / totalTime) + "%")
+      setThrashingPercentage2((100 * thrashingTimee / totalTime).toFixed(2) + "%")
       setSimTime2(totalTime + "s")
       setMemoryTable2(newMemoryTable)
       setProcesses2(mmu.memoryMap.size)
@@ -136,6 +135,8 @@ function App() {
   useEffect(() => {
     const fetchData = async () => {
       setMemoryTitle2(document.getElementById("mmuSelect").value)
+      setMemory(createMemory())
+      setMemory2(createMemory())
       MMU_Simulation.iniciate()
       var instructions = MMU_Simulation.instructions
       var sleepTime = MMU_Simulation.sleepTime
