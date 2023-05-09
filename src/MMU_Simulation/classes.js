@@ -88,14 +88,12 @@ export class MMU {
   }
 
   new(pid, size) {
-    console.log("Entro New");
     const ptr = this.allocatePages(pid, size);
     // La función "new" devuelve la primera dirección de puntero lógico (id de la primera página)
     return ptr;
   }
 
   use(ptr) {
-    console.log("Entro Use");
     const pages = this.pointerMap.get(ptr);
     if (!pages) {
       throw new Error(`Puntero no válido: ${ptr}`);
@@ -110,7 +108,6 @@ export class MMU {
   }
 
   delete(ptr) {
-    console.log("Entro Delete");
     const pages = this.pointerMap.get(ptr);
     if (!pages) {
       throw new Error(`Puntero no válido: ${ptr}`);
@@ -140,7 +137,6 @@ export class MMU {
   }
 
   kill(pid) {
-    console.log("Entro Kill");
     const ptrs = this.memoryMap.get(pid);
     this.memoryMap.delete(pid);
     const pages = [];
@@ -151,7 +147,6 @@ export class MMU {
     if (!pages) {
       throw new Error(`ID de proceso no válido: ${pid}`);
     }
-    console.log(pages);
 
     // Eliminar las páginas de memoria real y virtual y eliminar el puntero del mapa de memoria
 

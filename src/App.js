@@ -13,13 +13,7 @@ import './App.css'
 
 function App() {
   const [memory, setMemory] = useState(createMemory())
-  const [memoryTable, setMemoryTable] = useState([
-    {pageId: 1, pid: 1, loaded: "X", physicalAddress:1},
-    {pageId: 2, pid: 1, loaded: "X", physicalAddress:2},
-    {pageId: 3, pid: 1, loaded: "X", physicalAddress:3},
-    {pageId: 4, pid: 2, loaded: null, physicalAddress:null},
-    {pageId: 5, pid: 2, loaded: "X", physicalAddress:4},
-  ])
+  const [memoryTable, setMemoryTable] = useState([])
   const [memoryTitle, setMemoryTitle] = useState("")
   const [processes, setProcesses] = useState("")
   const [simTime, setSimTime] = useState("")
@@ -29,11 +23,31 @@ function App() {
   const [vRamPercentage, setVRamPercentage] = useState("")
   const [MMU_Simulation, setMMU_Simulation] = useState(null)
 
+  function updateInfo(mmu) {
+    var newMemoryTable = []
+
+    var keys = mmu.memoryMap.keys()
+    var pointerMap = mmu.pointerMap
+
+    mmu.memoryMap.forEach((value, key) => {
+      var PID = key
+      var pointers = value
+
+      pointers.forEach((pointer) => {
+        var pages = pointerMap.get(pointer)
+        pages.forEach((page) => {
+          newMemoryTable.push({pageId: page.id, pid: PID, pointer:pointer, loaded: page.location == "real" ? "X" : "", physicalAddress: page.physicalAddress})
+        })
+      })
+    })
+    
+    setMemoryTable(newMemoryTable)
+    setProcesses(mmu.memoryMap.size)
+
+  }
+
   useEffect(() => {
     const fetchData = async () => {
-      setTimeout(function() {
-        console.log("holita")
-      }, 3000)
       
       MMU_Simulation.iniciate()
       var instructions = MMU_Simulation.instructions
@@ -41,8 +55,17 @@ function App() {
 
       for (let index = 0; index < instructions.length; index++) {
         const instruction = instructions[index];
-        MMU_Simulation.executeInstruction(instruction, 1, sleepTime)
-        MMU_Simulation.executeInstruction(instruction, 2, sleepTime)
+        await Promise.all([
+          MMU_Simulation.executeInstruction(instruction, 1, sleepTime),
+          MMU_Simulation.executeInstruction(instruction, 2, sleepTime)
+        ]);
+
+        var optMMU = MMU_Simulation.optMMU
+        var otherMMU = MMU_Simulation.otherMMU
+
+        updateInfo(optMMU)
+        
+        console.log(instruction)
       }
 
       setMMU_Simulation(null)
@@ -81,17 +104,3 @@ function App() {
 }
 
 export default App;
-
-/*
-
-(async function main() {
-  for (const instruction of instructions) {
-    await Promise.all([
-      executeInstruction(instruction, optMMU, sleepTime),
-      executeInstruction(instruction, otherMMU, sleepTime),
-    ]);
-  }
-
-  // Puedes guardar los resultados en un archivo si lo deseas
-  // saveInstructionsToFile(instructions, outputFile);
-})(); */
