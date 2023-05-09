@@ -10,6 +10,7 @@ function MemoryTable({memoryCells, title}) {
                     <tr className='memory-tr'> 
                         <th className='memory-th'>Page ID</th>
                         <th className='memory-th'>PID</th>
+                        <th className='memory-th'>Pointer</th>
                         <th className='memory-th'>Loaded</th>
                         <th className='memory-th'>Physical Address</th>
                     </tr>
@@ -19,6 +20,7 @@ function MemoryTable({memoryCells, title}) {
                         <tr className='memory-tr' key={row.pageId}>
                             <td className='memory-td'>{row.pageId}</td>
                             <td className='memory-td'>{row.pid}</td>
+                            <td className='memory-td'>{row.pointer}</td>
                             <td className='memory-td'>{row.loaded}</td>
                             <td className='memory-td'>{row.physicalAddress}</td>
                         </tr>
