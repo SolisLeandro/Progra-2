@@ -149,17 +149,16 @@ export class MMU {
     }
 
     // Eliminar las páginas de memoria real y virtual y eliminar el puntero del mapa de memoria
-
-    for (const page of pages) {
-      if (page.location === "real") {
+    pages.forEach((value) => {
+      if (value.location === "real") {
         this.stopwatch.increaseTime();
-        this.realMemory[page.physicalAddress] = null;
+        this.realMemory[value.physicalAddress] = null;
       } else {
         this.stopwatch.increaseTrashingTime();
-        const index = this.virtualMemory.indexOf(page);
+        const index = this.virtualMemory.indexOf(value);
         this.virtualMemory.splice(index, 1);
       }
-    }
+    });
   }
 
   moveToRealMemory(page) {
