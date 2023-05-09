@@ -51,4 +51,4 @@ const colorsArray = [
     "#DCDCDC"
   ];
  
-  export default Header;
+  export default colorsArray;

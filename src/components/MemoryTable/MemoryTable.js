@@ -17,7 +17,7 @@ function MemoryTable({memoryCells, title}) {
                 </thead>
                 <tbody>
                     {memoryCells?.map((row) => (
-                        <tr className='memory-tr' key={row.pageId}>
+                        <tr className='memory-tr' key={row.pageId} style={{background:row.color}}>
                             <td className='memory-td'>{row.pageId}</td>
                             <td className='memory-td'>{row.pid}</td>
                             <td className='memory-td'>{row.pointer}</td>

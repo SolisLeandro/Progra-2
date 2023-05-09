@@ -7,7 +7,7 @@ function Ram({memory, title}) {
         <div className='memory-div'>
           { memory?.map((element, key) => {
             return (
-                <div key={key} style={element.color ? element.color : {}} className="memory-cell"></div>
+                <div key={key} style={element.color ? {background: element.color} : {}} className="memory-cell"></div>
             )
           })}
         </div>

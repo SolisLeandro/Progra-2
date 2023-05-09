@@ -8,6 +8,7 @@ import ProcessesTimeTable from "./components/ProcessesTimeTable/ProcessesTimeTab
 import RamTable from "./components/RamTable/RamTable"
 import PagesThrashingTable from "./components/PagesThrashingTable/PagesThrashingTable"
 import MMU_Simulation from "./MMU_Simulation/MMU_Simulation"
+import colorsArray from "./constants/colors"
 
 import './App.css'
 
@@ -28,8 +29,28 @@ function App() {
   const [fragmentation, setFragmentation] = useState("0KB")
   const [MMU_Simulation, setMMU_Simulation] = useState(null)
 
-  function updateInfo(mmu) {
+  const [memory2, setMemory2] = useState(createMemory())
+  const [memoryTable2, setMemoryTable2] = useState([])
+  const [memoryTitle2, setMemoryTitle2] = useState("")
+  const [processes2, setProcesses2] = useState(0)
+  const [simTime2, setSimTime2] = useState("0s")
+  const [ramKb2, setRamKb2] = useState(0)
+  const [ramPercentage2, setRamPercentage2] = useState("0%")
+  const [vRamKb2, setVRamKb2] = useState(0)
+  const [vRamPercentage2, setVRamPercentage2] = useState("0%")
+  const [pagesLoaded2, setPagesLoaded2] = useState(0)
+  const [pagesUnloaded2, setPagesUnloaded2] = useState(0)
+  const [thrashingTime2, setThrashingTime2] = useState("0s")
+  const [thrashingPercentage2, setThrashingPercentage2] = useState("0%")
+  const [fragmentation2, setFragmentation2] = useState("0KB")
+  const [MMU_Simulation2, setMMU_Simulation2] = useState(null)
+
+  var indexNextColor = 0
+  var usedColors = []
+
+  function updateInfo(mmu, mmuIndex) {
     var newMemoryTable = []
+    var ramPages = []
     var ramKb = 0
     var vRamKb = 0
     var fragmentationKb = 0
@@ -54,8 +75,22 @@ function App() {
           }
 
           fragmentationKb += page.size - page.usedSize
+          
+          var color = "" 
+          var fcolor = usedColors.find((x) => x.pid == PID)
+          if(fcolor){
+            color = fcolor.color
+          } else {
+            color = colorsArray[indexNextColor]
+            indexNextColor++
+            usedColors.push({pid: PID, color})
+          }
 
-          newMemoryTable.push({pageId: page.id, pid: PID, pointer:pointer, loaded: page.location == "real" ? "X" : "", physicalAddress: page.physicalAddress})
+          if(page.location == "real"){
+            ramPages.push({color})
+          }
+
+          newMemoryTable.push({pageId: page.id, pid: PID, pointer:pointer, loaded: page.location == "real" ? "X" : "", physicalAddress: page.physicalAddress, color})
         })
       })
     })
@@ -63,23 +98,44 @@ function App() {
     var thrashingTimee = mmu.stopwatch.trashingTime
     var totalTime = thrashingTimee + mmu.stopwatch.time
 
-    setRamKb(ramKb/1024)
-    setRamPercentage((100 * (ramKb/1024) / 400) + "%")
-    setVRamKb(vRamKb/1024)
-    setVRamPercentage((100 * (vRamKb/1024) / 400) + "%")
-    setFragmentation((fragmentationKb/1024).toFixed(2)+"KB")
-    setThrashingTime(thrashingTimee + "s")
-    setThrashingPercentage((100 * thrashingTimee / totalTime) + "%")
-    setSimTime(totalTime + "s")
-    setMemoryTable(newMemoryTable)
-    setProcesses(mmu.memoryMap.size)
-    setPagesLoaded(pagesLoadedd)
-    setPagesUnloaded(pagesUnloadedd)
+    while (ramPages.length < 100) {
+      ramPages.push({});
+    }
+
+    if(mmuIndex == 1){
+      setRamKb(ramKb/1024)
+      setRamPercentage((100 * (ramKb/1024) / 400) + "%")
+      setVRamKb(vRamKb/1024)
+      setVRamPercentage((100 * (vRamKb/1024) / 400) + "%")
+      setFragmentation((fragmentationKb/1024).toFixed(2)+"KB")
+      setThrashingTime(thrashingTimee + "s")
+      setThrashingPercentage((100 * thrashingTimee / totalTime) + "%")
+      setSimTime(totalTime + "s")
+      setMemoryTable(newMemoryTable)
+      setProcesses(mmu.memoryMap.size)
+      setPagesLoaded(pagesLoadedd)
+      setPagesUnloaded(pagesUnloadedd)
+      setMemory(ramPages)
+    } else {
+      setRamKb2(ramKb/1024)
+      setRamPercentage2((100 * (ramKb/1024) / 400) + "%")
+      setVRamKb2(vRamKb/1024)
+      setVRamPercentage2((100 * (vRamKb/1024) / 400) + "%")
+      setFragmentation2((fragmentationKb/1024).toFixed(2)+"KB")
+      setThrashingTime2(thrashingTimee + "s")
+      setThrashingPercentage2((100 * thrashingTimee / totalTime) + "%")
+      setSimTime2(totalTime + "s")
+      setMemoryTable2(newMemoryTable)
+      setProcesses2(mmu.memoryMap.size)
+      setPagesLoaded2(pagesLoadedd)
+      setPagesUnloaded2(pagesUnloadedd)
+      setMemory2(ramPages)
+    }
   }
 
   useEffect(() => {
     const fetchData = async () => {
-      
+      setMemoryTitle2(document.getElementById("mmuSelect").value)
       MMU_Simulation.iniciate()
       var instructions = MMU_Simulation.instructions
       var sleepTime = MMU_Simulation.sleepTime
@@ -94,9 +150,8 @@ function App() {
         var optMMU = MMU_Simulation.optMMU
         var otherMMU = MMU_Simulation.otherMMU
 
-        updateInfo(optMMU)
-        
-        console.log(instruction)
+        updateInfo(optMMU,1)
+        updateInfo(otherMMU,2)
       }
 
       setMMU_Simulation(null)
@@ -114,7 +169,7 @@ function App() {
       <Header MMU={MMU_Simulation} setMMU_Simulation={setMMU_Simulation} />
       <div className='memory-container'>
         <Ram memory={memory} title={"OPT"} />
-        <Ram memory={memory} title={memoryTitle} />
+        <Ram memory={memory2} title={memoryTitle2} />
       </div>
       <div className='memory-table-container'>
         <div className='memory-table-inner-container'>
@@ -124,10 +179,10 @@ function App() {
           <PagesThrashingTable pagesLoaded={pagesLoaded} pagesUnloaded={pagesUnloaded} thrashingTime={thrashingTime} thrashingPercentage={thrashingPercentage} fragmentation={fragmentation} />
         </div>
         <div className='memory-table-inner-container'>
-          <MemoryTable memoryCells={memoryTable} title={memoryTitle} />
-          <ProcessesTimeTable processes={processes} simTime={simTime} />
-          <RamTable ramKb={ramKb} ramPercentage={ramPercentage} vRamKb={vRamKb} vRamPercentage={vRamPercentage} />
-          <PagesThrashingTable pagesLoaded={pagesLoaded} pagesUnloaded={pagesUnloaded} thrashingTime={thrashingTime} thrashingPercentage={thrashingPercentage} fragmentation={fragmentation} />
+          <MemoryTable memoryCells={memoryTable2} title={memoryTitle2} />
+          <ProcessesTimeTable processes={processes2} simTime={simTime2} />
+          <RamTable ramKb={ramKb2} ramPercentage={ramPercentage2} vRamKb={vRamKb2} vRamPercentage={vRamPercentage2} />
+          <PagesThrashingTable pagesLoaded={pagesLoaded2} pagesUnloaded={pagesUnloaded2} thrashingTime={thrashingTime2} thrashingPercentage={thrashingPercentage2} fragmentation={fragmentation2} />
         </div>
       </div>
     </div>
