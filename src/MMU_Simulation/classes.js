@@ -140,25 +140,25 @@ export class MMU {
     const ptrs = this.memoryMap.get(pid);
     this.memoryMap.delete(pid);
     const pages = [];
-    ptrs.forEach((ptr) => {
-      pages.push(...this.pointerMap.get(ptr));
-      this.pointerMap.delete(ptr);
-    });
+    for (let i = 0; i < ptrs.length; i++) {
+      pages.push(...this.pointerMap.get(ptrs.at(i)));
+      this.pointerMap.delete(ptrs.at(i));
+    }
     if (!pages) {
       throw new Error(`ID de proceso no válido: ${pid}`);
     }
 
     // Eliminar las páginas de memoria real y virtual y eliminar el puntero del mapa de memoria
-    pages.forEach((value) => {
-      if (value.location === "real") {
+    for (const page of pages) {
+      if (page.location === "real") {
         this.stopwatch.increaseTime();
-        this.realMemory[value.physicalAddress] = null;
+        this.realMemory[page.physicalAddress] = null;
       } else {
         this.stopwatch.increaseTrashingTime();
-        const index = this.virtualMemory.indexOf(value);
+        const index = this.virtualMemory.indexOf(page);
         this.virtualMemory.splice(index, 1);
       }
-    });
+    }
   }
 
   moveToRealMemory(page) {
