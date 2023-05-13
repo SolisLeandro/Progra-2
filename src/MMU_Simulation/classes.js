@@ -214,6 +214,62 @@ export class FIFO_MMU extends MMU {
       console.log("movida correctamente")
     }
   }
+
+  delete(ptr) {
+    const pages = this.pointerMap.get(ptr);
+    if (!pages) {
+      throw new Error(`Puntero no válido: ${ptr}`);
+    }
+
+    // Eliminar las páginas de memoria real y virtual
+    for (const page of pages) {
+      if (page.location === "real") {
+        this.queue.splice(page.physicalAddress, 1);
+        this.realMemory[page.physicalAddress] = null;
+        this.stopwatch.increaseTime();
+      } else {
+        this.stopwatch.increaseTrashingTime();
+        const index = this.virtualMemory.indexOf(page);
+        this.virtualMemory.splice(index, 1);
+      }
+    }
+
+    // Eliminar el puntero del mapa de memoria
+    this.pointerMap.delete(ptr);
+    this.memoryMap.forEach((value, key) => {
+      const indexPtr = value.indexOf(ptr);
+      if (indexPtr !== -1) {
+        value.splice(indexPtr, 1);
+        this.memoryMap.set(key, value);
+      }
+    });
+  }
+
+  kill(pid) {
+    const ptrs = this.memoryMap.get(pid);
+    this.memoryMap.delete(pid);
+    const pages = [];
+    for (let i = 0; i < ptrs.length; i++) {
+      pages.push(...this.pointerMap.get(ptrs[i]));
+      this.pointerMap.delete(ptrs[i]);
+    }
+    if (!pages) {
+      throw new Error(`ID de proceso no válido: ${pid}`);
+    }
+
+    // Eliminar las páginas de memoria real y virtual y eliminar el puntero del mapa de memoria
+    for (let i = 0; i < pages.length; i++) {
+      if (pages.at(i).location === "real") {
+        this.stopwatch.increaseTime();
+        this.queue.splice(pages.at(i).physicalAddress,1);
+        this.realMemory[pages.at(i).physicalAddress] = null;
+      } else {
+        this.stopwatch.increaseTrashingTime();
+        const index = this.virtualMemory.indexOf(pages.at(i));
+        this.virtualMemory.splice(index, 1);
+      }
+    }
+  }
 }
 
 export class SC_MMU extends MMU {
