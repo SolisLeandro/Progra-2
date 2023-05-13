@@ -474,7 +474,7 @@ export class OptMMU extends MMU {
       const operation = instruction.instruction;
       const target = instruction.args;
 
-      if (operation === "use") {
+      if (operation === "use" && this.pointerMap.has(target)) {
         console.log("OPT findNextUsageDist::::")
         const targetPages = this.pointerMap.get(target);
         console.log("target",target)
