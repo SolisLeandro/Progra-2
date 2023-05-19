@@ -13,6 +13,8 @@ import colorsArray from "./constants/colors"
 import './App.css'
 
 function App() {
+  const [pause, setPause] = useState(false)
+
   const [memory, setMemory] = useState(createMemory())
   const [memoryTable, setMemoryTable] = useState([])
   const [memoryTitle, setMemoryTitle] = useState("")
@@ -94,7 +96,16 @@ function App() {
     var thrashingTimee = mmu.stopwatch.trashingTime
     var totalTime = thrashingTimee + mmu.stopwatch.time
 
-    newMemoryTable.sort((a, b) => a.physicalAddress - b.physicalAddress)
+    newMemoryTable.sort((a, b) => {
+      if (a.physicalAddress === null || a.physicalAddress === '') {
+        return 1; // Colocar a al final
+      }
+      if (b.physicalAddress === null || b.physicalAddress === '') {
+        return -1; // Colocar b al final
+      }
+      return a.physicalAddress - b.physicalAddress;
+    });
+    
     newMemoryTable?.forEach((elem) => {
       if(elem.loaded == "X"){
         ramPages[elem.physicalAddress] = {color: elem.color}
@@ -169,7 +180,7 @@ function App() {
 
   return (
     <div>
-      <Header MMU={MMU_Simulation} setMMU_Simulation={setMMU_Simulation} />
+      <Header MMU={MMU_Simulation} setMMU_Simulation={setMMU_Simulation} pause={pause} setPause={setPause} />
       <div className='memory-container'>
         <Ram memory={memory} title={"OPT"} />
         <Ram memory={memory2} title={memoryTitle2} />

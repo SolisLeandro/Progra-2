@@ -4,7 +4,7 @@ import {generateRandomInstructions, saveInstructionsToFile} from "../../MMU_Simu
 
 import './Header.css'
 
-function Header({setMMU_Simulation}) {
+function Header({MMU, setMMU_Simulation, pause, setPause}) {
   const [selectedFile, setSelectedFile] = useState("")
   
   const handleFileSelect = (event) => {
@@ -18,6 +18,16 @@ function Header({setMMU_Simulation}) {
       return event.target.result   
     };
     reader.readAsText(selectedFile);
+  }
+
+  const pauseBtnClick = () => {
+    if(pause){
+      MMU.resumeExecution()
+    } else {
+      MMU.pauseExecution()
+    }
+    setPause(!pause)
+
   }
 
   const startBtnClick = async () => {
@@ -83,7 +93,12 @@ function Header({setMMU_Simulation}) {
           <p>Archivo (Procesos)</p>
           <input type="file" onChange={handleFileSelect} />
         </div>
-        <button onClick={startBtnClick}>Generar</button>
+        {
+          MMU ? 
+            <button onClick={pauseBtnClick}>{pause ? "Reanudar" : "Pausar"}</button>
+          :
+            <button onClick={startBtnClick}>Generar</button>
+        }
       </div>
     )
   }

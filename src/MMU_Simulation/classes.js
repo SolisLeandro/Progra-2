@@ -316,7 +316,7 @@ export class SC_MMU extends MMU {
           // Mover la página más antigua a la memoria virtual
           oldestPage.location = "virtual";
           oldestPage.physicalAddress = null;
-          this.virtualMemrory.push(oldestPage);
+          this.virtualMemory.push(oldestPage);
 
           // Mover la nueva página a la memoria real
           this.realMemory[pageIndex] = page;
