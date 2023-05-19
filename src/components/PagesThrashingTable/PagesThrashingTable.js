@@ -20,7 +20,7 @@ function RamTable({pagesLoaded, pagesUnloaded, thrashingTime, thrashingPercentag
                         <td className='memory-td'>{pagesUnloaded}</td>
                     </tr>
                 </th>
-                <th className='memory-th-2'>
+                <th className='memory-th-2' style={parseFloat(thrashingPercentage.replace("%","")) > 50 ? {backgroundColor:"red"} : {backgroundColor:"mintcream"}}>
                     <td className='memory-td-2'>{thrashingTime}</td>
                     <td className='memory-td-2'>{thrashingPercentage}</td>
                 </th>

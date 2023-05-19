@@ -185,15 +185,12 @@ export class FIFO_MMU extends MMU {
 
     // Si hay espacio libre, asignamos la página a la memoria real
     if (freeIndex !== -1) {
-      console.log("Tratando de mover a memoria real", page);
       this.stopwatch.increaseTime();
       this.realMemory[freeIndex] = page;
       page.location = "real";
       page.physicalAddress = freeIndex;
       this.queue.push(page);
-      console.log("movida correctamente");
     } else {
-      console.log("Tratando de mover a memoria virtual", page);
       this.stopwatch.increaseTrashingTime();
       // Si no hay espacio libre, sacamos la página más antigua de la memoria real (FIFO)
       const oldestPage = this.queue.shift();
@@ -211,7 +208,6 @@ export class FIFO_MMU extends MMU {
 
       // Agregar la nueva página al final de la cola
       this.queue.push(page);
-      console.log("movida correctamente");
     }
   }
 
@@ -290,15 +286,12 @@ export class SC_MMU extends MMU {
 
     // Si hay espacio libre, asignamos la página a la memoria real
     if (freeIndex !== -1) {
-      console.log("Tratando de mover a memoria real", page);
       this.stopwatch.increaseTime();
       this.realMemory[freeIndex] = page;
       page.location = "real";
       page.physicalAddress = freeIndex;
       this.queue.push(page);
-      console.log("movida correctamente");
     } else {
-      console.log("Tratando de mover a memoria virtual", page);
       // Buscar la primera página con bit de referencia en 0
       this.stopwatch.increaseTrashingTime();
       let pageIndex = -1;
@@ -327,7 +320,6 @@ export class SC_MMU extends MMU {
           this.queue.push(page);
         }
       }
-      console.log("movida correctamente");
     }
   }
 
@@ -423,15 +415,12 @@ export class MRU_MMU extends MMU {
 
     // Si hay espacio libre, asignamos la página a la memoria real
     if (freeIndex !== -1) {
-      console.log("Tratando de mover a memoria real", page);
       this.stopwatch.increaseTime();
       this.realMemory[freeIndex] = page;
       page.location = "real";
       page.physicalAddress = freeIndex;
       this.lastUsed.unshift(page);
-      console.log("movida correctamente");
     } else {
-      console.log("Tratando de mover a memoria virtual", page);
       this.stopwatch.increaseTrashingTime();
 
       // Si no hay espacio libre, sacamos la página más recientemente utilizada de la memoria real
@@ -449,7 +438,6 @@ export class MRU_MMU extends MMU {
       page.location = "real";
       page.physicalAddress = mostRecentlyUsedPagePhysicalAddress;
       this.lastUsed.unshift(page);
-      console.log("movida correctamente");
     }
   }
 
@@ -542,14 +530,11 @@ export class RND_MMU extends MMU {
 
     // Si hay espacio libre, asignamos la página a la memoria real
     if (freeIndex !== -1) {
-      console.log("Tratando de mover a memoria real", page);
       this.stopwatch.increaseTime();
       this.realMemory[freeIndex] = page;
       page.location = "real";
       page.physicalAddress = freeIndex;
-      console.log("movida correctamente");
     } else {
-      console.log("Tratando de mover a memoria virtual", page);
       this.stopwatch.increaseTrashingTime();
       // Si no hay espacio libre, seleccionamos aleatoriamente una página para reemplazar
       const randomPageIndex = Math.floor(
@@ -566,7 +551,6 @@ export class RND_MMU extends MMU {
       this.realMemory[randomPageIndex] = page;
       page.location = "real";
       page.physicalAddress = randomPageIndex;
-      console.log("movida correctamente");
     }
   }
 }
@@ -586,14 +570,11 @@ export class OptMMU extends MMU {
     // Si hay un espacio libre en la memoria real, coloca la página en la primera posición vacía
     const freeIndex = this.realMemory.indexOf(null);
     if (freeIndex !== -1) {
-      console.log("Tratando de mover a memoria real", page);
       this.realMemory[freeIndex] = page;
       page.location = "real";
       page.physicalAddress = freeIndex;
       this.stopwatch.increaseTime();
-      console.log("movida correctamente");
     } else {
-      console.log("Tratando de mover a memoria virtual", page);
       this.stopwatch.increaseTrashingTime();
       // De lo contrario, encuentra la página óptima para reemplazar
       const optimalIndex = this.findOptimalPageIndex();
@@ -608,7 +589,6 @@ export class OptMMU extends MMU {
       this.realMemory[optimalIndex] = page;
       page.location = "real";
       page.physicalAddress = optimalIndex;
-      console.log("movida correctamente");
     }
   }
 
@@ -649,11 +629,7 @@ export class OptMMU extends MMU {
       const target = instruction.args;
 
       if (operation === "use" && this.pointerMap.has(target)) {
-        console.log("OPT findNextUsageDist::::");
         const targetPages = this.pointerMap.get(target);
-        console.log("target", target);
-        console.log("this.pointerMap", this.pointerMap);
-        console.log("targetPages", targetPages);
         const targetPageIds = targetPages.map((page) => page.id);
 
         if (targetPageIds.includes(currentPageId)) {

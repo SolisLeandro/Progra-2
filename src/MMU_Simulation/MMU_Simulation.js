@@ -61,7 +61,6 @@ class MMU_Simulation {
   }
 
   async executeInstruction(instruction, mmu, sleepTime) {
-    console.log("ejecutando el mmu ",mmu == 1 ? "opt":"other","---", )
     await new Promise((resolve) => {
       if (this.isPaused) {
         const checkInterval = setInterval(() => {

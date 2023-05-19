@@ -105,7 +105,7 @@ function App() {
       }
       return a.physicalAddress - b.physicalAddress;
     });
-    
+
     newMemoryTable?.forEach((elem) => {
       if(elem.loaded == "X"){
         ramPages[elem.physicalAddress] = {color: elem.color}
@@ -154,7 +154,6 @@ function App() {
 
       for (let index = 0; index < instructions.length; index++) {
         const instruction = instructions[index];
-        console.log("::::::::::::::Ejecutando: ",instruction.instruction, instruction.args[0] , instruction.args[1] ? instruction.args[1] : "" ,"::::::::::::::")
         await Promise.all([
           MMU_Simulation.executeInstruction(instruction, 1, sleepTime),
           MMU_Simulation.executeInstruction(instruction, 2, sleepTime)
@@ -165,7 +164,6 @@ function App() {
 
         updateInfo(optMMU,1)
         updateInfo(otherMMU,2)
-        console.log("::::::::::::::Finaliza::::::::::::::")
       }
 
       setMMU_Simulation(null)

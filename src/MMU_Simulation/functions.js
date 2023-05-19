@@ -17,9 +17,6 @@ export function loadAndProcessInstructions(inputFile) {
 
     return { instruction, args };
   });
-
-  console.log("instructions//////",instructions)
-
   return instructions;
 }
 
